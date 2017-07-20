@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+{% if not session['logged_in'] %}
+<p>Please Log In!!</p>
+{% else %}
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Your Profile</title>
+
+    <!-- Google fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>    
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <!-- D3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+        
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../static/css/half-slider.css" rel="stylesheet">
+</head>
+ <style>
+        @font-face {
+            font-family: Aleo;
+            src: url('../static/fonts/aleo/Aleo-Light.otf');
+            font-weight: lighter;
+        }
+
+        @font-face {
+            font-family: Aleo_Bold;
+            src: url('../static/fonts/aleo/Aleo-Bold.otf');
+            font-weight: bold;
+        }
+
+         .navbar{
+            opacity: 70%;
+        }
+
+        .navbar-header{
+            font-family: Aleo;
+        }
+
+        .navbar-nav{
+            font-family: Aleo;
+        }
+
+        h1 {
+            font-family: Aleo_Bold;
+        }
+
+        a {
+            font-weight: bold;
+        }
+    </style>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--<a class="navbar-brand" href="/memes">MatchMemeker</a>-->
+                <img src="../static/media/design/textlogosmallwhite.png" href="/memes"/>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <br>
+                        <a href="/memes/{{userId}}">Discover</a>
+                    </li>
+                    <li>
+                         <br>
+                        <a href="/results/{{userId}}">Your Matches</a>
+                    </li>
+                    <li>
+                         <br>
+                        <a href="/profile/{{userId}}">Your Profile</a>
+                    </li>
+                    <li>
+                        <br>
+                        <!--<a href="/display">Gallery</a>-->
+                        <a href="/display/{{userId}}">Gallery</a>
+                    </li>
+                    <li>
+                        <br>
+                        <a href="/tags/{{userId}}">Tag Memes</a>
+                    </li>
+                </ul>
+                 <ul class="nav navbar-nav" style="float:right;">
+                     <li>
+                         <br>
+                        <a href="/logout" class="confirmations">Log Out</a>
+                    </li>
+                    <script src="../static/js/confirmations.js"></script>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Half Page Image Background Carousel Header -->
+    <header id="myCarousel" class="carousel slide">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <!-- Wrapper for Slides -->
+        <div class="carousel-inner">
+            <div class="item active">
+                <!-- Set the first background image using inline CSS below. -->
+                <div class="fill" style="background-image:url({{picOne}});"></div>
+                <div class="carousel-caption">
+                </div>
+            </div>
+            <div class="item">
+                <!-- Set the second background image using inline CSS below. -->
+                <div class="fill" style="background-image:url({{picTwo}});"></div>
+                <div class="carousel-caption">
+                </div>
+            </div>
+            <div class="item">
+                <!-- Set the third background image using inline CSS below. -->
+                <div class="fill" style="background-image:url({{picThree}});"></div>
+                <div class="carousel-caption">
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"></span>
+        </a>
+
+    </header>
+
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12" align = "center">
+                <!--pull name from DB-->
+                <br><h1>{{particularName.name.title()}}</h1><br> <br><!--deleted ,20-->
+
+            {% if particularUser != None %}
+            <div class="radarChart"></div>
+
+            <script src="../static/js/radarChart.js"></script>   
+            <script>
+                var margin = {top: 100, right: 100, bottom: 100, left: 100},
+                    width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
+                    height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+
+                var data = [
+                          [//iPhone
+                            {axis:"Multi-Panel",value:"{{particularUser.multipanel/particularUser.total}}"},
+                            {axis:"Celebrity",value:"{{particularUser.celebrity/particularUser.total}}"},
+                            {axis:"Single-Image",value:"{{ particularUser.singleimage/particularUser.total }}"},
+                            {axis:"Anime",value:"{{particularUser.anime/particularUser.total}}"},
+                            {axis:"Gaming",value:"{{particularUser.gaming/particularUser.total}}"},
+                            {axis:"Wholesome",value:"{{particularUser.wholesome/particularUser.total}}"},
+                            {axis:"Politics",value:"{{particularUser.politics/particularUser.total}}"},
+                            {axis:"Race",value:"{{particularUser.race/particularUser.total}}"}          
+                          ]
+                        ];
+
+                var color = d3.scale.ordinal()
+                    .range(["#44d9e6"]);
+                    
+                var radarChartOptions = {
+                  w: width,
+                  h: height,
+                  margin: margin,
+                  maxValue: 0.5,
+                  levels: 5,
+                  roundStrokes: true,
+                  color: color
+                };
+                
+                RadarChart(".radarChart", data, radarChartOptions);
+            </script>
+            {% endif %}
+            <div class="subheading" align = "center">
+            <!--pull location/school from DB-->
+            </div>
+            <!--pull bio from DB-->
+            <br> 
+        </div>
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Memers</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- jQuery -->
+    <script src="../static/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/js/bootstrap.min.js"></script>
+
+    <!-- Script to Activate the Carousel -->
+    <script>
+    $('.carousel').carousel({
+        interval: 5000 //changes the speed
+    })
+    </script>
+
+</body>
+{% endif %}
+</html>
